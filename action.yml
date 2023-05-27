@@ -1,0 +1,40 @@
+name: 'Checkout'
+description: 'Checkout a Git repository at a particular version'
+inputs:
+  ref:
+    description: >
+      The branch, tag or SHA to checkout. When checking out the repository that
+      triggered a workflow, this defaults to the reference or SHA for that
+      event.  Otherwise, uses the default branch.
+  repo:
+    description: >
+      The repository to fetch from. This can be in any format supported by
+      `git fetch`, including remote URLs, repository names, and repository
+      URLs.
+    default: ${{ env.GITHUB_REPOSITORY_OWNER }}/github-actions
+  path:
+    description: >
+      The path, relative to your application root directory in which to place
+      the custom actions.
+    default: .github/actions
+  token:
+    description: >
+      Personal access token (PAT) used to fetch the repository. The PAT is configured
+      with the local git config, which enables your scripts to run authenticated git
+      commands. The post-job step removes the PAT.
+
+      We recommend using a service account with the least permissions necessary.
+      Also when generating a new PAT, select the least scopes necessary.
+
+      [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
+    default: ${{ github.token }}
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout actions repository
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ github.event.inputs.repo }}
+        ref: ${{ github.event.inputs.ref }}
+        token: ${{ github.event.inputs.token }}
+        path: ${{ github.event.inputs.path }}
