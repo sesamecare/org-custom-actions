@@ -11,7 +11,13 @@ inputs:
       The repository to fetch from. This can be in any format supported by
       `git fetch`, including remote URLs, repository names, and repository
       URLs.
-    default: ${{ env.GITHUB_REPOSITORY_OWNER }}/github-actions
+    default: github-actions
+  org:
+    description: >
+      This action tries to auto detect the organization name from the repository,
+      but if that is wrong, pass in the proper value (at some point you might as well
+      just use actions/checkout directly, as we aren't saving you much)
+    required: false
   path:
     description: >
       The path, relative to your application root directory in which to place
@@ -31,10 +37,16 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Get the organization name
+      id: get_org_name
+      if: ${{ !inputs.org }}
+      run: echo "::set-output name=org::$(echo ${{ github.repository }} | cut -d / -f1)"
+      shell: bash
+
     - name: Checkout actions repository
       uses: actions/checkout@v3
       with:
-        repository: ${{ github.event.inputs.repo }}
+        repository: ${{ inputs.org || steps.get_org_name.outputs.org }}/${{ github.event.inputs.repo }}
         ref: ${{ github.event.inputs.ref }}
         token: ${{ github.event.inputs.token }}
         path: ${{ github.event.inputs.path }}
