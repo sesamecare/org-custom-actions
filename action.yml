@@ -18,6 +18,7 @@ inputs:
       the custom actions.
     default: .github/actions
   token:
+    required: true
     description: >
       Personal access token (PAT) used to fetch the repository. The PAT is configured
       with the local git config, which enables your scripts to run authenticated git
@@ -27,7 +28,6 @@ inputs:
       Also when generating a new PAT, select the least scopes necessary.
 
       [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
-    default: ${{ github.token }}
 runs:
   using: "composite"
   steps:
