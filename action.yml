@@ -50,3 +50,7 @@ runs:
         ref: ${{ inputs.ref }}
         token: ${{ inputs.token }}
         path: ${{ inputs.path }}
+
+    - name: Run org-wide job if present
+      if: ${{ hashFiles('.github/actions/post-checkout/action.yml') != '' }}
+      uses: ./.github/actions/post-checkout
