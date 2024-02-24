@@ -44,7 +44,7 @@ runs:
       shell: bash
 
     - name: Checkout actions repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: ${{ inputs.org || steps.get_org_name.outputs.org }}/${{ inputs.repo }}
         ref: ${{ inputs.ref }}
